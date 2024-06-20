@@ -9,7 +9,7 @@ import PodcastDetail from './components/PodcastDetails';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar'; // Import the Sidebar component
 import FavoritesPage from './components/FavoritesPage';
-import { FavoritesProvider } from './components/FavoriteEpisodes'
+import { FavoritesProvider } from './components/FavoriteEpisodes';
 
 function App() {
   const [shows, setShows] = useState([]);
@@ -17,6 +17,7 @@ function App() {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -109,6 +110,14 @@ function App() {
     }
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const filteredShows = filterShows(shows.filter(show => 
+    show.title.toLowerCase().includes(searchQuery.toLowerCase())
+  ), filter);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -137,50 +146,50 @@ function App() {
     // Removed the other data
   ];
 
-  const filteredShows = filterShows(shows, filter);
-
   return (
     <FavoritesProvider>
-    <div className="font-sans bg-gray-100 min-h-screen flex">
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} /> {/* Include the Sidebar component */}
-      <div className="flex-1">
-        <Header />
-        {/* Open button for Sidebar */}
-        {!isOpen && (
-          <button 
-            className="absolute top-30 left-0 m-4 text-gray-600"
-            onClick={toggleSidebar}
-          >
-            👁️👁️
-          </button>
-        )}
-        <div className="w-[60%] m-auto pt-11">
-          <Carousel casts={casts} />
+      <div className="font-sans bg-gray-100 min-h-screen flex">
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} /> {/* Include the Sidebar component */}
+        <div className="flex-1">
+          <Header onSearch={handleSearch} /> {/* Pass onSearch function as prop */}
+          {/* Open button for Sidebar */}
+          {!isOpen && (
+            <button 
+              className="absolute top-30 left-0 m-4 text-gray-600"
+              onClick={toggleSidebar}
+            >
+              👁️👁️
+            </button>
+          )}
+          <div className="w-[60%] m-auto pt-11">
+            <Carousel casts={casts} />
+          </div>
+          <Navbar setFilter={setFilter} /> {/* Include the Navbar component here */}
+          <Routes>
+            <Route path="/" element={
+              <div className="podcast-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-5">
+                {filteredShows.map((show, index) => (
+                  <div key={index} className="podcast bg-white p-4">
+                    <Link to={`/podcast/${show.id}`}>
+                      <img src={show.image} alt={show.title} className="w-full h-auto mb-4 rounded" />
+                      <h3 className="my-2 text-xl font-bold overflow-hidden whitespace-nowrap overflow-ellipsis text-black">{show.title}</h3>
+                    </Link>
+                    <p><strong>Seasons:</strong> {show.seasons}</p>
+                    <p className="truncate"><strong>Genres:</strong> {show.genres}</p>
+                    <p><strong>Last updated:</strong> {show.updated}</p>
+                  </div>
+                ))}
+              </div>
+            } />
+            <Route path="/podcast/:id" element={<PodcastDetail shows={shows} />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+          </Routes>
         </div>
-        <Navbar setFilter={setFilter} /> {/* Include the Navbar component here */}
-        <Routes>
-          <Route path="/" element={
-            <div className="podcast-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-5">
-              {filteredShows.map((show, index) => (
-                <div key={index} className="podcast bg-white p-4">
-                  <Link to={`/podcast/${show.id}`}>
-                    <img src={show.image} alt={show.title} className="w-full h-auto mb-4 rounded" />
-                    <h3 className="my-2 text-xl font-bold overflow-hidden whitespace-nowrap overflow-ellipsis text-black">{show.title}</h3>
-                  </Link>
-                  <p><strong>Seasons:</strong> {show.seasons}</p>
-                  <p className="truncate"><strong>Genres:</strong> {show.genres}</p>
-                  <p><strong>Last updated:</strong> {show.updated}</p>
-                </div>
-              ))}
-            </div>
-          } />
-          <Route path="/podcast/:id" element={<PodcastDetail shows={shows} />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-        </Routes>
       </div>
-    </div>
     </FavoritesProvider>
   );
 }
 
-export default App; 
+export default App;
+
+
