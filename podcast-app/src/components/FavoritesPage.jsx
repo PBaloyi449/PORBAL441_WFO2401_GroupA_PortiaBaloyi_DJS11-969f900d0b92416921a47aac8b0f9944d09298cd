@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFavorites } from './FavoriteEpisodes';
 
-const FavoritesPage = () => {
+const FavoritesPage = ({ filter }) => {
   const { favorites, removeFavorite } = useFavorites();
 
   const formatDateTime = (timestamp) => {
@@ -9,25 +9,34 @@ const FavoritesPage = () => {
     return new Date(timestamp).toLocaleDateString('en-UK', options);
   };
 
-  const groupedFavorites = favorites.reduce((acc, favorite) => {
-    if (!acc[favorite.podcastTitle]) {
-      acc[favorite.podcastTitle] = [];
-    }
-    acc[favorite.podcastTitle].push(favorite);
-    return acc;
-  }, {});
+  // Function to group favorites by podcast title
+  const groupFavoritesByPodcast = (favorites) => {
+    return favorites.reduce((acc, favorite) => {
+      if (!acc[favorite.podcastTitle]) {
+        acc[favorite.podcastTitle] = [];
+      }
+      acc[favorite.podcastTitle].push(favorite);
+      return acc;
+    }, {});
+  };
+
+  const filteredFavorites = Object.keys(groupFavoritesByPodcast(favorites))
+    .map(podcastTitle => ({
+      podcastTitle,
+      episodes: favorites.filter(favorite => favorite.podcastTitle === podcastTitle)
+    }));
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-4">Your Favorites ❤️ </h1>
-      {Object.keys(groupedFavorites).length === 0 ? (
+      <h1 className="text-3xl font-bold mb-4">Your Favorites ❤️</h1>
+      {filteredFavorites.length === 0 ? (
         <div>No favorites added yet</div>
       ) : (
-        Object.keys(groupedFavorites).map(podcastTitle => (
-          <div key={podcastTitle} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">{podcastTitle}</h2>
+        filteredFavorites.map((podcast, index) => (
+          <div key={index} className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">{podcast.podcastTitle}</h2>
             <ul className="list-disc pl-10">
-              {groupedFavorites[podcastTitle].map(favorite => (
+              {podcast.episodes.map(favorite => (
                 <li key={favorite.title} className="mb-2 flex justify-between items-center">
                   <div>
                     <strong>{favorite.title}</strong> - Added on {formatDateTime(favorite.addedAt)}
@@ -49,3 +58,5 @@ const FavoritesPage = () => {
 };
 
 export default FavoritesPage;
+
+

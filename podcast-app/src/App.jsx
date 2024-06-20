@@ -188,7 +188,7 @@ function App() {
               </div>
             } />
             <Route path="/podcast/:id" element={<PodcastDetail shows={shows} />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/favorites" element={<FavoritesPage filter={filter} />} />
           </Routes>
         </div>
       </div>
