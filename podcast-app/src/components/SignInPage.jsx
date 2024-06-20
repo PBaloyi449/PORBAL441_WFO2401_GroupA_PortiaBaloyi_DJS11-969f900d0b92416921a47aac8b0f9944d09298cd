@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header'; // Import the Header component
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +15,8 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <Header onSearch={() => {}} /> {/* Include the Header component */}
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
         <form onSubmit={handleSignIn}>
           <div className="mb-4">
@@ -60,6 +62,3 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
-
-
-
