@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [filter, setFilter] = useState('All');
+  const [filter, setFilter] = useState('All'); // State for filter
   const [searchQuery, setSearchQuery] = useState('');
 
   const toggleSidebar = () => {
@@ -188,7 +188,7 @@ function App() {
               </div>
             } />
             <Route path="/podcast/:id" element={<PodcastDetail shows={shows} />} />
-            <Route path="/favorites" element={<FavoritesPage filter={filter} />} />
+            <Route path="/favorites" element={<FavoritesPage filter={filter} />} /> {/* Pass filter prop to FavoritesPage */}
           </Routes>
         </div>
       </div>
@@ -197,6 +197,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
