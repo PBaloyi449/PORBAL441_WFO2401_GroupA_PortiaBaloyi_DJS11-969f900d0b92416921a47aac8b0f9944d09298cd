@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar'; // Import the Sidebar component
 import FavoritesPage from './components/FavoritesPage';
 import { FavoritesProvider } from './components/FavoriteEpisodes';
+import Fuse from 'fuse.js'; // Import Fuse.js
 
 function App() {
   const [shows, setShows] = useState([]);
@@ -114,9 +115,14 @@ function App() {
     setSearchQuery(query);
   };
 
-  const filteredShows = filterShows(shows.filter(show => 
-    show.title.toLowerCase().includes(searchQuery.toLowerCase())
-  ), filter);
+  // Fuse.js setup
+  const fuse = new Fuse(shows, {
+    keys: ['title'],
+    threshold: 0.3 // Adjust the threshold for more/less fuzzy results
+  });
+
+  const searchResults = searchQuery ? fuse.search(searchQuery).map(result => result.item) : shows;
+  const filteredShows = filterShows(searchResults, filter);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -191,5 +197,6 @@ function App() {
 }
 
 export default App;
+
 
 
