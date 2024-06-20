@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [filter, setFilter] = useState('All'); // State for filter
+  const [filter, setFilter] = useState('A-Z'); // State for filter
   const [searchQuery, setSearchQuery] = useState('');
   const [genres, setGenres] = useState({}); // State to hold genre details
 
