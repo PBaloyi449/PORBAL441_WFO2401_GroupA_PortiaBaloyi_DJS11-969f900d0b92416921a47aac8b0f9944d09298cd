@@ -19,6 +19,7 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState('All'); // State for filter
   const [searchQuery, setSearchQuery] = useState('');
+  const [genres, setGenres] = useState({}); // State to hold genre details
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -27,6 +28,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch podcast data
         const response = await fetch('https://podcast-api.netlify.app');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,6 +38,23 @@ function App() {
         if (!Array.isArray(data)) {
           throw new Error('Data is not an array');
         }
+
+        // Fetch genre data from genre.json
+        const genreResponse = await fetch('../genre/genre.json');
+        if (!genreResponse.ok) {
+          throw new Error(`HTTP error! status: ${genreResponse.status}`);
+        }
+        const genreData = await genreResponse.json();
+
+        // Map genres by ID for quick lookup
+        const genreMap = {};
+        genreData.forEach(genre => {
+          genreMap[genre.id] = {
+            title: genre.title,
+            description: genre.description,
+            shows: genre.shows
+          };
+        });
 
         const extractedData = data.map(show => {
           const {
@@ -48,30 +67,11 @@ function App() {
             updated = 'Unknown Date'
           } = show;
 
-          const genreNames = genres.map(id => {
-            switch (id) {
-              case 1:
-                return 'Personal Growth';
-              case 2:
-                return 'Investigative Journalism';
-              case 3:
-                return 'History';
-              case 4:
-                return 'Comedy';
-              case 5:
-                return 'Entertainment';
-              case 6:
-                return 'Business';
-              case 7:
-                return 'Fiction';
-              case 8:
-                return 'News';
-              case 9:
-                return 'Kids and Family';
-              default:
-                return 'Unknown Genre';
-            }
-          }).join(', ');
+          const genreDetails = genres.map(id => ({
+            id,
+            title: genreMap[id]?.title || 'Unknown Genre',
+            description: genreMap[id]?.description || 'No Description'
+          }));
 
           const formattedUpdated = new Date(updated).toLocaleDateString('en-UK', {
             day: 'numeric',
@@ -79,11 +79,12 @@ function App() {
             year: 'numeric'
           });
 
-          return { id, image, title, description, seasons, genres: genreNames, updated: formattedUpdated };
+          return { id, image, title, description, seasons, genres: genreDetails, updated: formattedUpdated };
         });
 
         setShows(extractedData);
         setLoading(false);
+        setGenres(genreMap);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
@@ -105,7 +106,7 @@ function App() {
       case 'Oldest':
         return [...shows].sort((a, b) => new Date(a.updated) - new Date(b.updated));
       case 'All Genres':
-        return shows; // Assuming no filtering by genres is required
+        return shows;
       default:
         return shows;
     }
@@ -115,10 +116,9 @@ function App() {
     setSearchQuery(query);
   };
 
-  // Fuse.js setup
   const fuse = new Fuse(shows, {
     keys: ['title'],
-    threshold: 0.3 // Adjust the threshold for more/less fuzzy results
+    threshold: 0.3
   });
 
   const searchResults = searchQuery ? fuse.search(searchQuery).map(result => result.item) : shows;
@@ -132,33 +132,12 @@ function App() {
     return <div>Error fetching data: {error}</div>;
   }
 
-  let casts = [
-    { 
-      id: 1,
-      image:"https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be5e2743c7aef19eac53532a29d66954da6e8dbdda8219b059a59c0abe6dba6049892b10dfb2f25ed90d6fe8d9a.jpeg",
-      title: "Something Was Wrong",
-      description: "Something Was Wrong is an Iris Award-winning true-crime docuseries about the discovery, trauma, and recovery from shocking life events and abusive relationships.",
-      seasons: 14,
-      genre: "Personal Growth, History"
-    },
-    {
-      id: 2,
-      image:"https://content.production.cdn.art19.com/images/5a/4f/d4/19/5a4fd419-11af-4270-b31c-2c7ed2f563a5/bc913bc926be23d04c9a4d29a829269a753be3d2612dad91f7e92ba4618fefc5c8802af29a1d32b3261eb03f83613e2535e3c574469b0cb510c32cd8d94cfaa1.png",
-      title: "Something Was Wrong",
-      description: "Something Was Wrong is an Iris Award-winning true-crime docuseries about the discovery, trauma, and recovery from shocking life events and abusive relationships.",
-      seasons: 14,
-      genre: "Personal Growth, History"
-    }
-    // Removed the other data
-  ];
-
   return (
     <FavoritesProvider>
       <div className="font-sans bg-gray-100 min-h-screen flex">
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} /> {/* Include the Sidebar component */}
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
         <div className="flex-1">
-          <Header onSearch={handleSearch} /> {/* Pass onSearch function as prop */}
-          {/* Open button for Sidebar */}
+          <Header onSearch={handleSearch} />
           {!isOpen && (
             <button 
               className="absolute top-30 left-0 m-4 text-gray-600"
@@ -170,7 +149,7 @@ function App() {
           <div className="w-[60%] m-auto pt-11">
             <Carousel casts={casts} />
           </div>
-          <Navbar setFilter={setFilter} /> {/* Include the Navbar component here */}
+          <Navbar setFilter={setFilter} />
           <Routes>
             <Route path="/" element={
               <div className="podcast-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-5">
@@ -181,14 +160,21 @@ function App() {
                       <h3 className="my-2 text-xl font-bold overflow-hidden whitespace-nowrap overflow-ellipsis text-black">{show.title}</h3>
                     </Link>
                     <p><strong>Seasons:</strong> {show.seasons}</p>
-                    <p className="truncate"><strong>Genres:</strong> {show.genres}</p>
+                    <p className="truncate"><strong>Genres:</strong> 
+                      {show.genres.map((genre, index) => (
+                        <span key={index}>
+                          {genre.title}
+                          {index < show.genres.length - 1 ? ', ' : ''}
+                        </span>
+                      ))}
+                    </p>
                     <p><strong>Last updated:</strong> {show.updated}</p>
                   </div>
                 ))}
               </div>
             } />
             <Route path="/podcast/:id" element={<PodcastDetail shows={shows} />} />
-            <Route path="/favorites" element={<FavoritesPage filter={filter} />} /> {/* Pass filter prop to FavoritesPage */}
+            <Route path="/favorites" element={<FavoritesPage filter={filter} />} />
           </Routes>
         </div>
       </div>
@@ -197,6 +183,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
