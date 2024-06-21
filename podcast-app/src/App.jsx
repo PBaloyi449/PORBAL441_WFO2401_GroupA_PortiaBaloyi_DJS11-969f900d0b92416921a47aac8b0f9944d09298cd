@@ -91,7 +91,8 @@ function App() {
       case 'All Genres':
         return shows;
       default:
-        return shows;
+        // Filter by genre
+        return shows.filter(show => show.genres.some(genre => genre.title === filter));
     }
   };
 
@@ -176,4 +177,5 @@ function App() {
 }
 
 export default App;
+
 
