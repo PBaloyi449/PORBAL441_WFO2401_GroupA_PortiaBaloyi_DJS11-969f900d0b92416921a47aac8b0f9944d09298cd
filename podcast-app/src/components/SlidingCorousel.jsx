@@ -16,25 +16,28 @@ const Carousel = ({ casts }) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden flex justify-center items-center">
       <div
         className="flex transition-transform ease-out duration-300"
         style={{
-          transform: `translateX(-${current * 100 / casts.length}%)`,
+          transform: `translateX(-${current * 100}%)`,
           width: `${casts.length * 100}%`,
         }}
       >
         {casts.map((cast, index) => (
-          <div key={index} className="flex-shrink-0 w-full flex items-center justify-center">
-            <div className="flex p-4 w-full max-w-screen-xl mx-auto">
-              <img 
-                src={cast.image} 
-                alt={`cast ${index}`} 
+          <div
+            key={index}
+            className="flex-shrink-0 w-full flex justify-center items-center"
+            style={{ width: '100%' }}
+          >
+            <div className="flex items-center justify-center p-4 w-full max-w-screen-xl mx-auto">
+              <img
+                src={cast.image}
+                alt={`cast ${index}`}
                 className="w-32 h-auto mb-4"
               />
-              <div className="ml-4">
+              <div className="ml-4 text-left">
                 <h3 className="text-xl font-bold">{cast.title}</h3>
-                <p>{cast.description}</p>
                 <p><strong>Seasons:</strong> {cast.seasons}</p>
                 <p><strong>Genres:</strong> {cast.genre}</p>
               </div>
@@ -66,3 +69,4 @@ const Carousel = ({ casts }) => {
 };
 
 export default Carousel;
+

@@ -124,6 +124,17 @@ function App() {
   const searchResults = searchQuery ? fuse.search(searchQuery).map(result => result.item) : shows;
   const filteredShows = filterShows(searchResults, filter);
 
+  // Select 5 random shows
+  const getRandomShows = (shows, count) => {
+    const shuffled = [...shows].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const randomShows = getRandomShows(shows, 5).map(show => ({
+    ...show,
+    genres: show.genres.map(genre => genre.title) // Extract genre titles for display
+  }));
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -131,26 +142,6 @@ function App() {
   if (error) {
     return <div>Error fetching data: {error}</div>;
   }
-
-  let casts = [
-    { 
-      id: 1,
-      image:"https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be5e2743c7aef19eac53532a29d66954da6e8dbdda8219b059a59c0abe6dba6049892b10dfb2f25ed90d6fe8d9a.jpeg",
-      title: "Something Was Wrong",
-      description: "Something Was Wrong is an Iris Award-winning true-crime docuseries about the discovery, trauma, and recovery from shocking life events and abusive relationships.",
-      seasons: 14,
-      genre: "Personal Growth, History"
-    },
-    {
-      id: 2,
-      image:"https://content.production.cdn.art19.com/images/5a/4f/d4/19/5a4fd419-11af-4270-b31c-2c7ed2f563a5/bc913bc926be23d04c9a4d29a829269a753be3d2612dad91f7e92ba4618fefc5c8802af29a1d32b3261eb03f83613e2535e3c574469b0cb510c32cd8d94cfaa1.png",
-      title: "Something Was Wrong",
-      description: "Something Was Wrong is an Iris Award-winning true-crime docuseries about the discovery, trauma, and recovery from shocking life events and abusive relationships.",
-      seasons: 14,
-      genre: "Personal Growth, History"
-    }
-    // Removed the other data
-  ];
 
   return (
     <FavoritesProvider>
@@ -167,7 +158,7 @@ function App() {
             </button>
           )}
           <div className="w-[60%] m-auto pt-11">
-            <Carousel casts={casts} />
+            <Carousel casts={randomShows} />
           </div>
           <Navbar setFilter={setFilter} />
           <Routes>
@@ -203,6 +194,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

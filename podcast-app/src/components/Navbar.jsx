@@ -15,43 +15,43 @@ const Navbar = ({ setFilter }) => {
         {isFavoritesPage ? (
           <>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('All Favorites')}>All Favorites</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('All Favorites')}>All Favorites</a>
             </li>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Favorites A-Z')}>A-Z</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Favorites A-Z')}>A-Z</a>
             </li>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Favorites Z-A')}>Z-A</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Favorites Z-A')}>Z-A</a>
             </li>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Newest Favorites')}>Newest</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Newest Favorites')}>Newest</a>
             </li>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Oldest Favorites')}>Oldest</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Oldest Favorites')}>Oldest</a>
             </li>
             <li className="px-4">
-              <NavLink to="/favorites" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Delete All')}>Delete All</NavLink>
+              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Delete All')}>Delete All</a>
             </li>
           </>
         ) : (
           <>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('All')}>All</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('All')}>All</NavLink>
             </li>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('A-Z')}>A-Z</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('A-Z')}>A-Z</NavLink>
             </li>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Z-A')}>Z-A</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('Z-A')}>Z-A</NavLink>
             </li>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Newest')}>Newest</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('Newest')}>Newest</NavLink>
             </li>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('Oldest')}>Oldest</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('Oldest')}>Oldest</NavLink>
             </li>
             <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeclassname="font-bold" onClick={() => handleFilterChange('All Genres')}>All Genres</NavLink>
+              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('All Genres')}>All Genres</NavLink>
             </li>
           </>
         )}
@@ -61,5 +61,4 @@ const Navbar = ({ setFilter }) => {
 };
 
 export default Navbar;
-
 
