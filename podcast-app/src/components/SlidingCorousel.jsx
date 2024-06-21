@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BsFillArrowRightCircleFill,
   BsFillArrowLeftCircleFill,
@@ -15,6 +15,16 @@ const Carousel = ({ casts }) => {
   const nextCast = () => {
     setCurrent(current === casts.length - 1 ? 0 : current + 1);
   };
+
+  // Use useEffect to set up the interval for auto-sliding
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextCast();
+    }, 3000); // Change slide every 3 seconds
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [current]); // Dependency array to reset interval on current change
 
   return (
     <div className="relative w-full overflow-hidden flex justify-center items-center">
@@ -55,7 +65,7 @@ const Carousel = ({ casts }) => {
         ))}
       </div>
 
-      <div className="absolute top-0 left-0 h-full w-full flex justify-between items-center text-white px-10 text-3xl">
+      <div className="absolute top-0 left-0 h-full w-full flex justify-between items-center text-gray-500 px-10 text-3xl">
         <button onClick={previousCast} className="absolute left-0 ml-0">
           <BsFillArrowLeftCircleFill />
         </button>
@@ -78,6 +88,7 @@ const Carousel = ({ casts }) => {
 };
 
 export default Carousel;
+
 
 
 
