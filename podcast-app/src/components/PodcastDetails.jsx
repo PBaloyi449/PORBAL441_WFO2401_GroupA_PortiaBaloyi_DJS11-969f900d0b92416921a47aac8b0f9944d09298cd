@@ -77,12 +77,23 @@ const PodcastDetail = () => {
             <h2 className="text-2xl font-semibold mb-4">Seasons</h2>
             {show.seasons.map((season, index) => (
               <button
-                key={season.title}
-                className="block text-left w-full text-lg font-semibold mb-2 focus:outline-none"
-                onClick={() => toggleSeason(season)}
-              >
-                {index + 1}. Season {season.season} ({season.episodes.length} episodes)
-              </button>
+              key={season.title}
+              className={`block text-left w-full text-lg font-semibold mb-2 focus:outline-none ${
+                expandedSeason === season ? 'bg-gray-300' : ''
+              }`}
+              onClick={() => toggleSeason(season)}
+            >
+              <div className="flex items-center">
+                {season.image && (
+                  <img
+                    src={season.image}
+                    alt={`Season ${season.season} Image`}
+                    className="w-16 h-16 rounded-full mr-2"
+                  />
+                )}
+                <span>{index + 1}. Season {season.season} ({season.episodes.length} episodes)</span>
+              </div>
+            </button>
             ))}
           </div>
         </div>
