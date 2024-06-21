@@ -2,12 +2,16 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { genres } from './genre.js'; // Assuming genres are imported from a file
 
-const Navbar = ({ setFilter }) => {
+const Navbar = ({ setFilter, clearFavorites }) => {
   const location = useLocation();
   const isFavoritesPage = location.pathname === '/favorites';
 
   const handleFilterChange = (filter) => {
-    setFilter(filter);
+    if (filter === 'Delete All') {
+      clearFavorites();
+    } else {
+      setFilter(filter);
+    }
   };
 
   return (
@@ -70,5 +74,6 @@ const Navbar = ({ setFilter }) => {
 };
 
 export default Navbar;
+
 
 

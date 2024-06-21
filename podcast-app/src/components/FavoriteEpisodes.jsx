@@ -1,32 +1,29 @@
-import React, { createContext, useState, useContext } from 'react';
+import { useState, useContext, createContext } from 'react';
 
-const FavoriteEpisodes = createContext();
+const FavoritesContext = createContext();
 
 export const useFavorites = () => {
-  return useContext(FavoriteEpisodes);
+  return useContext(FavoritesContext);
 };
 
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState(() => {
-    const storedFavorites = localStorage.getItem('favorites');
-    return storedFavorites ? JSON.parse(storedFavorites) : [];
-  });
+  const [favorites, setFavorites] = useState([]);
 
-  const addFavorite = (episode) => {
-    const newFavorites = [...favorites, episode];
-    setFavorites(newFavorites);
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+  const addFavorite = (favorite) => {
+    setFavorites([...favorites, favorite]);
   };
 
-  const removeFavorite = (episode) => {
-    const newFavorites = favorites.filter(fav => fav.title !== episode.title || fav.podcastTitle !== episode.podcastTitle);
-    setFavorites(newFavorites);
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+  const removeFavorite = (favoriteToRemove) => {
+    setFavorites(favorites.filter(favorite => favorite.title !== favoriteToRemove.title));
+  };
+
+  const clearFavorites = () => {
+    setFavorites([]);
   };
 
   return (
-    <FavoriteEpisodes.Provider value={{ favorites, addFavorite, removeFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite, clearFavorites }}>
       {children}
-    </FavoriteEpisodes.Provider>
+    </FavoritesContext.Provider>
   );
 };
