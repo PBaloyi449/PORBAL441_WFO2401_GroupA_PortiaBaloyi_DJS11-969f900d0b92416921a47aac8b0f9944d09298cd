@@ -10,7 +10,6 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar'; // Import the Sidebar component
 import FavoritesPage from './components/FavoritesPage';
 import { FavoritesProvider } from './components/FavoriteEpisodes';
-import SignInPage from './components/SignInPage';
 import Fuse from 'fuse.js'; // Import Fuse.js
 
 function App() {
@@ -172,8 +171,7 @@ function App() {
           </div>
           <Navbar setFilter={setFilter} />
           <Routes>
-          <Route path="/" element={<SignInPage />} />
-            <Route path="/home" element={
+            <Route path="/" element={
               <div className="podcast-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-5">
                 {filteredShows.map((show, index) => (
                   <div key={index} className="podcast bg-white p-4">
