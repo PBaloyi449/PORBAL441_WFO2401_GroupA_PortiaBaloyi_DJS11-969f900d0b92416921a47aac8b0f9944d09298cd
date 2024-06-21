@@ -43,14 +43,27 @@ const PodcastDetail = () => {
   };
 
   const handleAddToFavorites = (episode) => {
+    // Add episode to favorites using context or any other method
     addFavorite({
       ...episode,
       podcastId: id,
       podcastTitle: show.title,
       addedAt: new Date().toISOString()
     });
+  
+    // Save to localStorage
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites.push({
+      ...episode,
+      podcastId: id,
+      podcastTitle: show.title,
+      addedAt: new Date().toISOString()
+    });
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  
     console.log(`Added episode ${episode.title} to favorites`);
   };
+  
 
   if (loading) {
     return <div>Loading...</div>;

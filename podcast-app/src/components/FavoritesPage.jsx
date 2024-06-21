@@ -83,6 +83,3 @@ const FavoritesPage = ({ filter }) => {
 };
 
 export default FavoritesPage;
-
-
-
