@@ -16,9 +16,6 @@ const Navbar = ({ setFilter }) => {
         {isFavoritesPage ? (
           <>
             <li className="px-4">
-              <a href="#" className="text-gray-800" onClick={() => handleFilterChange('All Favorites')}>All Favorites</a>
-            </li>
-            <li className="px-4">
               <a href="#" className="text-gray-800" onClick={() => handleFilterChange('Favorites A-Z')}>A-Z</a>
             </li>
             <li className="px-4">
@@ -36,9 +33,6 @@ const Navbar = ({ setFilter }) => {
           </>
         ) : (
           <>
-            <li className="px-4">
-              <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('All')}>All</NavLink>
-            </li>
             <li className="px-4">
               <NavLink to="/" className="text-gray-800" activeClassName="font-bold" onClick={() => handleFilterChange('A-Z')}>A-Z</NavLink>
             </li>

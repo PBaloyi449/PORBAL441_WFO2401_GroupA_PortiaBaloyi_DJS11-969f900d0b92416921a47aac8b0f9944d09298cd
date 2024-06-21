@@ -88,7 +88,7 @@ function App() {
         return [...shows].sort((a, b) => new Date(b.updated) - new Date(a.updated));
       case 'Oldest':
         return [...shows].sort((a, b) => new Date(a.updated) - new Date(b.updated));
-      case 'All Genres':
+      case 'Genres':
         return shows;
       default:
         // Filter by genre
