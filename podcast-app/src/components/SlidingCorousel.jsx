@@ -3,6 +3,7 @@ import {
   BsFillArrowRightCircleFill,
   BsFillArrowLeftCircleFill,
 } from 'react-icons/bs';
+import { genres } from './genre.js'; // Import genres
 
 const Carousel = ({ casts }) => {
   const [current, setCurrent] = useState(0);
@@ -39,7 +40,15 @@ const Carousel = ({ casts }) => {
               <div className="ml-4 text-left">
                 <h3 className="text-xl font-bold">{cast.title}</h3>
                 <p><strong>Seasons:</strong> {cast.seasons}</p>
-                <p><strong>Genres:</strong> {cast.genre}</p>
+                <p><strong>Genres:</strong> 
+                  {cast.genres.map((genre, index) => (
+                    <span key={index}>
+                      {genres[genre.id] || 'Unknown Genre'}
+                      {index < cast.genres.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </p>
+                <p><strong>Last updated:</strong> {cast.updated}</p>
               </div>
             </div>
           </div>
@@ -69,4 +78,6 @@ const Carousel = ({ casts }) => {
 };
 
 export default Carousel;
+
+
 

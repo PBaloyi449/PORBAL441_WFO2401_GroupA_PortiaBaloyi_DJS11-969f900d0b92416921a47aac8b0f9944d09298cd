@@ -11,6 +11,7 @@ import Sidebar from './components/Sidebar'; // Import the Sidebar component
 import FavoritesPage from './components/FavoritesPage';
 import { FavoritesProvider } from './components/FavoriteEpisodes';
 import Fuse from 'fuse.js'; // Import Fuse.js
+import { genres } from './components/genre.js'; // Import genre data
 
 function App() {
   const [shows, setShows] = useState([]);
@@ -19,7 +20,6 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState('A-Z'); // State for filter
   const [searchQuery, setSearchQuery] = useState('');
-  const [genres, setGenres] = useState({}); // State to hold genre details
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -39,23 +39,6 @@ function App() {
           throw new Error('Data is not an array');
         }
 
-        // Fetch genre data from genre.json
-        const genreResponse = await fetch('../genre/genre.json');
-        if (!genreResponse.ok) {
-          throw new Error(`HTTP error! status: ${genreResponse.status}`);
-        }
-        const genreData = await genreResponse.json();
-
-        // Map genres by ID for quick lookup
-        const genreMap = {};
-        genreData.forEach(genre => {
-          genreMap[genre.id] = {
-            title: genre.title,
-            description: genre.description,
-            shows: genre.shows
-          };
-        });
-
         const extractedData = data.map(show => {
           const {
             id = '',
@@ -63,14 +46,13 @@ function App() {
             title = 'No Title',
             description = 'No Description',
             seasons = 0,
-            genres = [],
+            genres: showGenres = [],
             updated = 'Unknown Date'
           } = show;
 
-          const genreDetails = genres.map(id => ({
+          const genreDetails = showGenres.map(id => ({
             id,
-            title: genreMap[id]?.title || 'Unknown Genre',
-            description: genreMap[id]?.description || 'No Description'
+            title: genres[id] || 'Unknown Genre'
           }));
 
           const formattedUpdated = new Date(updated).toLocaleDateString('en-UK', {
@@ -84,7 +66,6 @@ function App() {
 
         setShows(extractedData);
         setLoading(false);
-        setGenres(genreMap);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
@@ -130,10 +111,7 @@ function App() {
     return shuffled.slice(0, count);
   };
 
-  const randomShows = getRandomShows(shows, 5).map(show => ({
-    ...show,
-    genres: show.genres.map(genre => genre.title) // Extract genre titles for display
-  }));
+  const randomShows = getRandomShows(shows, 5);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -194,9 +172,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
