@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header'; // Import the Header component
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -9,14 +8,13 @@ const SignInPage = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    // Perform authentication logic here (replace with actual authentication)
-    // For simplicity, let's assume the user is authenticated successfully
-    navigate('/home'); // Navigate to the home page after successful sign-in
+    // Perform sign-in logic, then navigate to the home page
+    // Example navigation to '/home'
+    navigate('/home');
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <Header onSearch={() => {}} /> {/* Include the Header component */}
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
         <form onSubmit={handleSignIn}>
           <div className="mb-4">
